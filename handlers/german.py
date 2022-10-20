@@ -12,8 +12,4 @@ from loader import dp
 async def _(message: types.Message):
     logger.info(f'PRANK Z GERMANA')
 
-    if not os.path.exists('./media'):
-        logger.warning('./media does not exist')
-        return
-
     await message.answer('на php пишет', reply=True)

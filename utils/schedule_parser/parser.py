@@ -12,7 +12,6 @@
        /  / ████████
       // /   \\ \
 '''
-from numpy import less
 import requests
 from hashlib import md5
 
@@ -134,6 +133,7 @@ class ScheduleParser:
         new_schedule_sum = md5(new_schedule.text.encode()).hexdigest()
          
         if new_schedule_sum != self.__schedule_sum:
+            logger.debug('new schedule')
             self.__schedule_sum = new_schedule_sum
             self.__schedule = self.__parse(new_schedule)
 
