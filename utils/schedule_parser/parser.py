@@ -27,24 +27,24 @@ class ScheduleParser:
         self.__schedule = dict()
         self.__schedule_sum = ''
 
-    '''
-    Получение страницы с расписанием 
-    '''
     @logger.catch
     def __get(self) -> str:
+        '''
+        Получение страницы с расписанием 
+        '''
         page = requests.get(self.__url, headers={'User-Agent': UserAgent().chrome})
         page_soup = BeautifulSoup(page.text, features='html.parser')
         return page_soup
         
 
 
-    '''
-    Парсинг блока с информацией о паре 
-    added - истина если пара - замена
-    возвращает: словарь с информацией о паре 
-    '''
     @logger.catch
     def __parse_div(self, div: Tag, *, added: bool = False):
+        '''
+        Парсинг блока с информацией о паре 
+        added - истина если пара - замена
+        возвращает: словарь с информацией о паре 
+        '''
         lesson = dict()
 
         lesson['added'] = added 
@@ -55,13 +55,13 @@ class ScheduleParser:
 
         return lesson
     
-    '''
-    Парсинг блока таблицы с парой(ами)
-    is_added - истина если пара - замена 
-    возвращает: список пар(пара и её замена;пары по подгруппам;пустой список если нет пары)
-    '''
     @logger.catch
     def __parse_td(self, td: Tag) -> list | None:
+        '''
+        Парсинг блока таблицы с парой(ами)
+        is_added - истина если пара - замена 
+        возвращает: список пар(пара и её замена;пары по подгруппам;пустой список если нет пары)
+        '''
         lessons = list()
 
         div_all = td.findChildren('div', recursive=False)
@@ -79,13 +79,13 @@ class ScheduleParser:
 
         return lessons
 
-    '''
-    Парсинг строкрасписания 
-    find_all('td')[1:-1]: первый и воследний div - номер пары
-    возвращает: список пар(первые, вторые и тд) для всех дней 
-    '''
     @logger.catch
     def __parse_tr(self, tr: Tag) -> list:
+        '''
+        Парсинг строкрасписания 
+        find_all('td')[1:-1]: первый и воследний div - номер пары
+        возвращает: список пар(первые, вторые и тд) для всех дней 
+        '''
         lessons = []
 
         td_all = tr.find_all('td')[1:-1] 
@@ -93,12 +93,12 @@ class ScheduleParser:
             lessons.append(self.__parse_td(td))
         return lessons
 
-    '''
-    Составляет полное расписание на неделю
-    возвращает: словарь(день недели => список пар)
-    '''
     @logger.catch
     def __parse(self, schedule: BeautifulSoup) -> dict:
+        '''
+        Составляет полное расписание на неделю
+        возвращает: словарь(день недели => список пар)
+        '''
         schedule_dict = { i: list() for i in range(7) }
         table = schedule.find('table')
 
@@ -119,13 +119,13 @@ class ScheduleParser:
         
         return schedule_dict 
 
-    '''
-    Проверяет актуально ли расписание
-    Если да, то возвращает его
-    Если нет, то парсит актуальное и ⤴
-    '''
     @logger.catch
     def get_schedule(self, day: int = None) -> dict:
+        '''
+        Проверяет актуально ли расписание
+        Если да, то возвращает его
+        Если нет, то парсит актуальное и ⤴
+        '''
         if day is not None:
             day = day % 7 
         
