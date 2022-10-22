@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 from aiogram.utils.markdown import bold
 from loguru import logger
 from aiogram import types
