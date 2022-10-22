@@ -1,6 +1,3 @@
-from random import choice
-import os
-
 from loguru import logger
 from aiogram import types
 

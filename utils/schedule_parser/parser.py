@@ -127,7 +127,7 @@ class ScheduleParser:
         Если нет, то парсит актуальное и ⤴
         '''
         if day is not None:
-            day = day % 7 
+            day = day % 6 
         
         new_schedule = self.__get()
         new_schedule_sum = md5(new_schedule.text.encode()).hexdigest()

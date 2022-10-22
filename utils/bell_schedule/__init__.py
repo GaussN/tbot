@@ -41,6 +41,8 @@ def get_first_lesson(lessons):
 def time_to_bell():
     now = datetime.now()
     week_day = min(5, datetime.weekday(now))
+    # now = datetime.strptime('14.33', '%H.%M') # deb
+    # week_day = 4 # deb 
     
 
     schedule = schedule_parser.get_schedule()

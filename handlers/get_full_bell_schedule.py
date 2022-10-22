@@ -24,13 +24,17 @@ async def _(message: types.Message):
     
     now = datetime.now()
     week_day = datetime.weekday(now)
+    # week_day = 6 # deb
 
-    answer = f'Расписание звонков на {now.strftime("%d/%m")}\n'
+    answer = 'Сегодня звонков нет'
 
-    i = 1
-    for bells in BELLS[week_day]:
-        answer += f'{i:02}) {bells[0]} - {bells[1]}\n'
-        i += 1
+    if week_day != 6:
+        answer = f'Расписание звонков на {now.strftime("%d/%m")}\n'
+
+        i = 1
+        for bells in BELLS[week_day]:
+            answer += f'{i:02}) {bells[0]} - {bells[1]}\n'
+            i += 1
 
 
     msg = await message.answer(answer, parse_mode='markdown')
