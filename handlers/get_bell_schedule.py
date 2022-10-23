@@ -20,8 +20,12 @@ async def _(message: types.Message):
         return
     
     ttb = time_to_bell()
-     
-    if None not in ttb:
+    
+    answer = ''
+
+    if ttb == (None, None):
+        answer = 'На этой неделе всё'
+    elif None not in ttb:
         time_str = ''
         #{bold(f"{ttb[1].hour} час {ttb[1].minute} минут")}
         time_str += bold(ttb[1].hour)

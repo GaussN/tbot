@@ -10,6 +10,8 @@ from loader import schedule_parser
 from loader import messages
 from loader import dp
 
+
+@logger.catch
 @dp.message_handler(commands='get_day')
 async def get_day_schedule(message: Message):
     logger.info(f'{message.from_id} get day schedule')
@@ -23,14 +25,16 @@ async def get_day_schedule(message: Message):
         logger.info(f'timeout')
         return
 
-    # проверка на выходной есть внутри 
-    schedule = schedule_parser.get_schedule(week_day)
+    message_answer = 'Сегодня пар нет'
+    if week_day != 6:
+        schedule = schedule_parser.get_schedule(week_day)
 
-    days = ('Понедельник', 'Вторник', 'Среда', 'Четверг' ,'Пятница' ,'Суббота')
-    message_answer = f'{days[week_day%6]}\n'
-    message_answer += build_day(schedule)
+        days = ('Понедельник', 'Вторник', 'Среда', 'Четверг' ,'Пятница' ,'Суббота')
+        message_answer = f'{days[week_day]}\n' # если сегодня вс то вернет пары на пн
+        message_answer += build_day(schedule)
 
     msg = await message.answer(message_answer)
+    
     if messages[3] is not None:
         await dp.bot.delete_message(message.chat.id, messages[3].message_id)
     messages[3] = msg

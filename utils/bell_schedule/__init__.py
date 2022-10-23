@@ -40,11 +40,11 @@ def get_first_lesson(lessons):
 @logger.catch
 def time_to_bell():
     now = datetime.now()
-    week_day = min(5, datetime.weekday(now))
-    # now = datetime.strptime('14.33', '%H.%M') # deb
-    # week_day = 4 # deb 
-    
+    week_day = datetime.weekday(now)
 
+    if week_day > 5:
+        return (None, None)
+    
     schedule = schedule_parser.get_schedule()
 
     last_lesson = get_last_lesson(schedule[week_day])
@@ -52,7 +52,7 @@ def time_to_bell():
     end_time = datetime.strptime(BELLS[week_day][last_lesson][1], '%H.%M')
 
     # если пары закончились и сегодня суббота то никакого расписания до пн 
-    if week_day >= 5 and now.time() > end_time.time():
+    if week_day == 5 and now.time() > end_time.time():
         return (None, None)
 
     first_lesson = get_first_lesson(schedule[week_day+1])

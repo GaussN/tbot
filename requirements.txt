@@ -1,4 +1,4 @@
-pip>=22.2.2
+pip>=22.3
 loguru>=0.6.0
 python-dotenv>=0.21.0
 aiogram>=2.22.2
