@@ -10,6 +10,7 @@
 from datetime import datetime, timedelta
 
 from loguru import logger
+from numpy import outer
 
 from loader import schedule_parser
 from config import BELLS
@@ -42,6 +43,8 @@ def time_to_bell():
     now = datetime.now()
     week_day = datetime.weekday(now)
 
+    logger.debug(f'week day: {week_day}')
+    logger.debug(f'now: {now}')
     if week_day > 5:
         return (None, None)
     
@@ -58,10 +61,15 @@ def time_to_bell():
     first_lesson = get_first_lesson(schedule[week_day+1])
 
     # если пары закончились или ещё не начались
-    start_time = datetime.strptime(BELLS[week_day][first_lesson][0], '%H.%M')
-    if now.time() > end_time.time() or now.time() < start_time.time():
+    start_time = datetime.strptime(BELLS[week_day+1][first_lesson][0], '%H.%M')
+    if now.time() > end_time.time():
         return (start_time, None)
 
+    first_lesson = get_first_lesson(schedule[week_day])
+    start_time = datetime.strptime(BELLS[week_day][first_lesson][0], '%H.%M')
+
+    if now.time() < start_time.time():
+        return (start_time, None)
 
     ### если пары ещё идут 
     from_class = 0 # время до звонока с урока 

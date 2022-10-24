@@ -23,6 +23,8 @@ async def _(message: types.Message):
     
     answer = ''
 
+    logger.debug(f'ttb: {ttb}')
+
     if ttb == (None, None):
         answer = 'На этой неделе всё'
     elif None not in ttb:
@@ -40,11 +42,11 @@ async def _(message: types.Message):
         time_str += bold(ttb[0].hour)
         time_str += ' ' + ('часов' if ttb[0].hour == 0 else 'час' if ttb[0].hour == 1 else 'часа') + ' '
         time_str += bold(ttb[0].minute)
-        time_str += ' ' + ('минут' if 20 >= ttb[0].minute >= 10 else 'минута' if ttb[0].hour%10 == 1 else 'минуты' if ttb[0].minute%10<=5 else 'минут') + ' '
+        time_str += ' ' + ('минут' if 20 >= ttb[0].minute >= 10 else 'минута' if ttb[0].minute % 10 == 1 else 'минуты' if ttb[0].minute %10 < 5 else 'минут') + ' '
     
         answer += f'До начала пары осталось: {time_str}'
-    elif ttb[0] is not None: 
-        answer = f'Сегодня пары всё.\nЗавтра пара начнется в {bold(ttb[0].time())}'
+    elif ttb[1] is None: 
+        answer = f'Сегодня пары всё.\nСегодня/Завтра пара начнется в {bold(ttb[0].time())}'
     else:
         answer = f'На этой недели всё по звонкам'
     
