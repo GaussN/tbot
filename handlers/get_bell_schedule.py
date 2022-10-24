@@ -33,7 +33,7 @@ async def _(message: types.Message):
         time_str += bold(ttb[1].hour)
         time_str += ' ' + ('часов' if ttb[1].hour == 0 else 'час' if ttb[1].hour == 1 else 'часа') + ' '
         time_str += bold(ttb[1].minute)
-        time_str += ' ' + ('минут' if 20 >= ttb[1].minute >= 10 else 'минута' if ttb[1].hour%10 == 1 else 'минуты' if ttb[1].minute%10<=5 else 'минут') + ' '
+        time_str += ' ' + ('минут' if (20 > ttb[1].minute > 10  or ttb[1].minute % 10 == 0) else 'минута' if ttb[1].minute%10 == 1 else 'минут' if ttb[1].minute%10 >= 5 else 'минуты') + ' '
 
         answer = f'До конца пары осталось: {time_str}\n'
         
@@ -42,7 +42,8 @@ async def _(message: types.Message):
         time_str += bold(ttb[0].hour)
         time_str += ' ' + ('часов' if ttb[0].hour == 0 else 'час' if ttb[0].hour == 1 else 'часа') + ' '
         time_str += bold(ttb[0].minute)
-        time_str += ' ' + ('минут' if 20 >= ttb[0].minute >= 10 else 'минута' if ttb[0].minute % 10 == 1 else 'минуты' if ttb[0].minute %10 < 5 else 'минут') + ' '
+        time_str += ' ' + ('минут' if (20 > ttb[0].minute > 10 or ttb[0].minute % 10 == 0) else 'минута' if ttb[0].minute%10 == 1 else 'минут' if ttb[0].minute%10 >= 5 else 'минуты') + ' '
+        # time_str += ' ' + ('минут' if (20 >= ttb[0].minute >= 10 or ttb[0].minute % 10 < 5 or ttb[0].minute % 10 == 0) else 'минута' if ttb[0].minute % 10 == 1 else 'минуты') + ' '
     
         answer += f'До начала пары осталось: {time_str}'
     elif ttb[1] is None: 
