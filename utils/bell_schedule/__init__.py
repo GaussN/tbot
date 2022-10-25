@@ -41,7 +41,7 @@ def get_first_lesson(lessons):
 @logger.catch
 def time_to_bell():
     #now = datetime.now()
-    now = datetime(day=25, month=10, year=2022, hour=9, minute=37)
+    now = datetime(day=25, month=10, year=2022, hour=13, minute=15)
     week_day = datetime.weekday(now)
 
     logger.debug(f'week day: {week_day}')
