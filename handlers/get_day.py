@@ -5,7 +5,9 @@ from aiogram.types import Message
 from loguru import logger 
 
 from utils.schedule_parser import build_day
+from utils import delete_message
 from utils import check_timeout
+from config import TIMEOUT
 from loader import schedule_parser
 from loader import messages
 from loader import dp
@@ -21,7 +23,7 @@ async def get_day_schedule(message: Message):
 
     await message.delete()
 
-    if not check_timeout(index_in_lrtl=3, timeout=1):
+    if not check_timeout(index_in_lrtl=3, timeout=TIMEOUT):
         logger.info(f'timeout')
         return
 
@@ -33,8 +35,9 @@ async def get_day_schedule(message: Message):
         message_answer = f'{days[week_day]}\n' # если сегодня вс то вернет пары на пн
         message_answer += build_day(schedule)
 
+    # msg = await message.answer(message_answer)
+
+    chat_id = message.chat.id
     msg = await message.answer(message_answer)
     
-    if messages[3] is not None:
-        await dp.bot.delete_message(message.chat.id, messages[3].message_id)
-    messages[3] = msg
+    await delete_message(chat_id, msg)

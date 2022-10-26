@@ -4,6 +4,8 @@ from aiogram import types
 
 from utils.check_timeout import check_timeout
 from utils.bell_schedule import time_to_bell
+from utils import delete_message
+from config import TIMEOUT
 from loader import messages
 from loader import dp
 
@@ -15,18 +17,18 @@ async def _(message: types.Message):
 
     await message.delete()
 
-    if not check_timeout(index_in_lrtl=1):
+    if not check_timeout(index_in_lrtl=1, timeout=TIMEOUT):
         logger.info(f'timeout')
         return
     
     ttb = time_to_bell()
     
-    answer = ''
+    message_answer = ''
 
     logger.debug(f'ttb: {ttb}')
 
     if ttb == (None, None):
-        answer = 'На этой неделе всё'
+        message_answer = 'На этой неделе всё'
     elif None not in ttb:
         time_str = ''
         #{bold(f"{ttb[1].hour} час {ttb[1].minute} минут")}
@@ -36,7 +38,7 @@ async def _(message: types.Message):
         time_str += bold(ttb[1].minute)
         time_str += ' ' + ('минут' if (20 > ttb[1].minute > 10  or ttb[1].minute % 10 == 0) else 'минута' if ttb[1].minute%10 == 1 else 'минут' if ttb[1].minute%10 >= 5 else 'минуты') + ' '
 
-        answer = f'До конца пары осталось: {time_str}\n'
+        message_answer = f'До конца пары осталось: {time_str}\n'
         
         time_str = ''
         #{bold(f"{ttb[0].hour} час {ttb[0].minute} минут")}
@@ -47,14 +49,13 @@ async def _(message: types.Message):
         time_str += ' ' + ('минут' if (20 > ttb[0].minute > 10 or ttb[0].minute % 10 == 0) else 'минута' if ttb[0].minute%10 == 1 else 'минут' if ttb[0].minute%10 >= 5 else 'минуты') + ' '
         # time_str += ' ' + ('минут' if (20 >= ttb[0].minute >= 10 or ttb[0].minute % 10 < 5 or ttb[0].minute % 10 == 0) else 'минута' if ttb[0].minute % 10 == 1 else 'минуты') + ' '
     
-        answer += f'До начала пары осталось: {time_str}'
+        message_answer += f'До начала пары осталось: {time_str}'
     elif ttb[1] is None: 
-        answer = f'Сегодня пары всё.\nСегодня/Завтра пара начнется в {bold(ttb[0].time())}'
+        message_answer = f'Сегодня пары всё.\nСегодня/Завтра пара начнется в {bold(ttb[0].time())}'
     else:
-        answer = f'На этой недели всё по звонкам'
+        message_answer = f'На этой недели всё по звонкам'
     
-
-    msg = await message.answer(answer, parse_mode='markdown')
-    if messages[1] is not None:
-        await dp.bot.delete_message(message.chat.id, messages[1].message_id)
-    messages[1] = msg
+    chat_id = message.chat.id
+    msg = await message.answer(message_answer)
+    
+    await delete_message(chat_id, msg)
