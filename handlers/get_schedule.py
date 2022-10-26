@@ -26,4 +26,4 @@ async def _(message: types.Message):
     chat_id = message.chat.id
     msg = await message.answer(message_answer)
     
-    await delete_message(chat_id, msg)
+    await delete_message(chat_id, msg, 0)
