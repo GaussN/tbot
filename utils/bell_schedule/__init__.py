@@ -41,36 +41,36 @@ def get_first_lesson(lessons):
 @logger.catch
 def time_to_bell():
     now = datetime.now()
-    #now = datetime(day=25, month=10, year=2022, hour=13, minute=15)
+    # now = datetime(day=24, month=10, year=2022, hour=10, minute=20)
     week_day = datetime.weekday(now)
 
-    logger.debug(f'week day: {week_day}')
-    logger.debug(f'now: {now}')
-    
+    logger.debug(f'{now=}')
+    logger.debug(f'{week_day=}')
+
     if week_day > 5:
         return (None, None)
-    
+
     schedule = schedule_parser.get_schedule()
-
-    last_lesson = get_last_lesson(schedule[week_day])
-
-    end_time = datetime.strptime(BELLS[week_day][last_lesson][1], '%H.%M')
-
-    # если пары закончились и сегодня суббота то никакого расписания до пн 
-    if week_day == 5 and now.time() > end_time.time():
-        return (None, None)
-
-    first_lesson = get_first_lesson(schedule[week_day+1])
-
-    # если пары закончились или ещё не начались
-    start_time = datetime.strptime(BELLS[week_day+1][first_lesson][0], '%H.%M')
-    if now.time() > end_time.time():
-        return (start_time, None)
-
+    
     first_lesson = get_first_lesson(schedule[week_day])
+    last_lesson = get_last_lesson(schedule[week_day])
+    
+    end_time = datetime.strptime(BELLS[week_day][last_lesson][1], '%H.%M')
     start_time = datetime.strptime(BELLS[week_day][first_lesson][0], '%H.%M')
 
     if now.time() < start_time.time():
+        logger.debug(f'{start_time=}')
+        return (start_time, None)
+
+    if now.time() > end_time.time():
+        if week_day == 5:
+            return (None, None)
+        first_lesson = get_first_lesson(schedule[week_day+1])
+        start_time = datetime.strptime(BELLS[week_day+1][first_lesson][0], '%H.%M')
+        
+        logger.debug(f'{first_lesson=}')
+        logger.debug(f'{start_time=}')
+        
         return (start_time, None)
 
     ### если пары ещё идут 
@@ -89,5 +89,8 @@ def time_to_bell():
             from_class = (lesson_end - timedelta(hours=now.hour, minutes=now.minute)).time() 
             break
     ###
+
+    logger.debug(f'{to_class}')
+    logger.debug(f'{from_class}')
 
     return (to_class, from_class)

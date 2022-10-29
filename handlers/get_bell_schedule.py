@@ -56,6 +56,6 @@ async def _(message: types.Message):
         message_answer = f'На этой недели всё по звонкам'
     
     chat_id = message.chat.id
-    msg = await message.answer(message_answer)
+    msg = await message.answer(message_answer, parse_mode='markdown')
     
     await delete_message(chat_id, msg, 3)

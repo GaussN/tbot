@@ -4,6 +4,7 @@ from datetime import datetime
 from aiogram.types import Message
 from loguru import logger 
 
+from utils.bell_schedule import get_last_lesson
 from utils.schedule_parser import build_day
 from utils import delete_message
 from utils import check_timeout
@@ -11,6 +12,7 @@ from config import TIMEOUT
 from loader import schedule_parser
 from loader import messages
 from loader import dp
+from config import BELLS
 
 
 @logger.catch
@@ -35,7 +37,10 @@ async def get_day_schedule(message: Message):
         message_answer = f'{days[week_day]}\n' # если сегодня вс то вернет пары на пн
         message_answer += build_day(schedule)
 
-    # msg = await message.answer(message_answer)
+    last_lesson = get_last_lesson(schedule[week_day])
+    end_time = datetime.strptime(BELLS[week_day][last_lesson][1], '%H.%M')
+    if now.time() > end_time.time():
+        message_answer = 'Пары закончились'
 
     chat_id = message.chat.id
     msg = await message.answer(message_answer)
