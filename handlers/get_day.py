@@ -1,4 +1,3 @@
-from calendar import week
 from datetime import datetime
 
 from aiogram.types import Message
@@ -23,6 +22,9 @@ async def get_day_schedule(message: Message):
     now = datetime.now()
     week_day = datetime.weekday(now)
 
+    logger.debug(f'{now=}')
+    logger.debug(f'{week_day=}')
+
     await message.delete()
 
     if not check_timeout(index_in_lrtl=3, timeout=TIMEOUT):
@@ -37,8 +39,9 @@ async def get_day_schedule(message: Message):
         message_answer = f'{days[week_day]}\n' # если сегодня вс то вернет пары на пн
         message_answer += build_day(schedule)
 
-    last_lesson = get_last_lesson(schedule[week_day])
+    last_lesson = get_last_lesson(schedule)
     end_time = datetime.strptime(BELLS[week_day][last_lesson][1], '%H.%M')
+
     if now.time() > end_time.time():
         message_answer = 'Пары закончились'
 

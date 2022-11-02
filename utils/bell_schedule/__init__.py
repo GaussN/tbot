@@ -21,7 +21,7 @@ def get_last_lesson(lessons):
     lesson_last = len(lessons)
     for lesson in reversed(lessons):
         lesson_last -= 1
-        if lesson != []:
+        if lesson:
             break
 
     return lesson_last
@@ -31,7 +31,7 @@ def get_last_lesson(lessons):
 def get_first_lesson(lessons):
     lesson_first = 0
     for lesson in lessons:
-        if lesson != []:
+        if lesson:
             break
         lesson_first += 1
 

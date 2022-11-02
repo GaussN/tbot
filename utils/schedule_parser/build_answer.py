@@ -9,14 +9,14 @@ def build_day(lessons: list) -> str:
     num = 1
     counter = 0
     for lesson in lessons:
-        if buf == None:
+        if buf is None:
             buf = lesson
             continue
         elif buf == lesson:
             counter += 1
             continue
         else:
-            if buf != []:
+            if buf:
                 res += f'{num}-{num+counter}) ' if counter != 0 else f'{num}) '
                 for l in buf:
                     res += f'{l["subject"]} / '
