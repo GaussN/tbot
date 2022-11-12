@@ -22,17 +22,19 @@ def get_last_lesson(lessons):
     for lesson in reversed(lessons):
         lesson_last -= 1
         if lesson:
-            break
+            if 'Урок снят' != lesson[0]['subject']:
+                break
 
     return lesson_last
 
-
+#and 'Урок снят' not in lesson['subject']
 @logger.catch
 def get_first_lesson(lessons):
     lesson_first = 0
     for lesson in lessons:
         if lesson:
-            break
+            if 'Урок снят' != lesson[0]['subject']:
+                break
         lesson_first += 1
 
     return lesson_first
@@ -41,7 +43,7 @@ def get_first_lesson(lessons):
 @logger.catch
 def time_to_bell():
     now = datetime.now()
-    # now = datetime(day=24, month=10, year=2022, hour=10, minute=20)
+    # now = datetime(day=12, month=11, year=2022, hour=7, minute=20)
     week_day = datetime.weekday(now)
 
     logger.debug(f'{now=}')
@@ -52,6 +54,8 @@ def time_to_bell():
 
     schedule = schedule_parser.get_schedule()
     
+    logger.debug(f'{schedule[week_day]=}')
+
     first_lesson = get_first_lesson(schedule[week_day])
     last_lesson = get_last_lesson(schedule[week_day])
     
