@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from aiogram.utils.markdown import bold
 from loguru import logger
 from aiogram import types
@@ -31,7 +33,6 @@ async def _(message: types.Message):
         message_answer = 'На этой неделе всё'
     elif None not in ttb:
         time_str = ''
-        #{bold(f"{ttb[1].hour} час {ttb[1].minute} минут")}
         if ttb[1].hour != 0:
             time_str += bold(ttb[1].hour)
             time_str += ' ' + ('часов' if ttb[1].hour == 0 else 'час' if ttb[1].hour == 1 else 'часа') + ' '
@@ -41,7 +42,6 @@ async def _(message: types.Message):
         message_answer = f'До конца пары осталось: {time_str}\n'
         
         time_str = ''
-        #{bold(f"{ttb[0].hour} час {ttb[0].minute} минут")}
         if ttb[0].hour != 0:
             time_str += bold(ttb[0].hour)
             time_str += ' ' + ('часов' if ttb[0].hour == 0 else 'час' if ttb[0].hour == 1 else 'часа') + ' '
@@ -51,7 +51,10 @@ async def _(message: types.Message):
     
         message_answer += f'До начала пары осталось: {time_str}'
     elif ttb[1] is None: 
-        message_answer = f'Сегодня пары всё.\nСегодня/Завтра пара начнется в {bold(ttb[0].time())}'
+        dzisiajalbojutro = 'завтра '
+        if ttb[0].time() > datetime.now().time():
+            dzisiajalbojutro = ''
+        message_answer = f'Сегодня пары всё.\nПара начнется {dzisiajalbojutro}в {bold(ttb[0].time())}'
     else:
         message_answer = f'На этой недели всё по звонкам'
     

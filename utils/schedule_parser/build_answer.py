@@ -12,7 +12,7 @@ def build_day(lessons: list) -> str:
         if buf is None:
             buf = lesson
             continue
-        elif buf == lesson:
+        elif sorted(buf, key=lambda k: k['teacher']) == sorted(lesson, key=lambda k: k['teacher']):
             counter += 1
             continue
         else:

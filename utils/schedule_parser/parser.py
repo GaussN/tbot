@@ -1,17 +1,3 @@
-'''
-/  イ          (((ヽ
-(  ノ           ￣Y  \
-|  ( \   (.  /)  |   )
- ヽ ヽ ` (° ‌ʖ ‌°)_ノ  /
-     ＼ | ⌒Ｙ⌒ / /
-      | ヽ  |   ﾉ／
-      ＼トー仝ーイ
-       | ミ土彡/
-       ) \  ° /
-       (  \  / )
-       /  / ████████
-      // /   \\ \
-'''
 import requests
 from hashlib import md5
 
@@ -36,8 +22,6 @@ class ScheduleParser:
         page_soup = BeautifulSoup(page.text, features='html.parser')
         return page_soup
         
-
-
     @logger.catch
     def __parse_div(self, div: Tag, *, added: bool = False):
         '''
@@ -65,7 +49,9 @@ class ScheduleParser:
         lessons = list()
 
         div_all = td.findChildren('div', recursive=False)
-        for div in div_all:
+        for div in div_all:            
+            if 'removed' in div['class']:
+                continue
             is_added = False
             if 'empty-pair' not in div['class']:
                 if 'added' in div['class']: 
